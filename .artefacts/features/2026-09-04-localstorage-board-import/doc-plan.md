@@ -38,28 +38,33 @@ Current first bullet (line 46-54) ends with:
 > app is consume-only — it never produces a board export, since it
 > doesn't design boards.
 
-Draft replacement (four sources instead of three, plus the new
-same-origin caveat):
+**Updated at UAT (2026-09-04): file/paste JSON import is removed, not
+kept.** Draft replacement below revised accordingly — two import paths,
+not four:
 
 ```markdown
 - **Board interchange** (`src/boardImport.ts`) — consumes the canonical
   `{schema, version, board}` envelope documented in `BOARD_SCHEMA.md`
   (`agile-toolkit/.github` meta-repo), with a fallback to a bare board
-  object for producers that predate the schema. Four import paths, all
+  object for producers that predate the schema. Two import paths, both
   going through the same `unwrapBoardImport()`: a "From Kanban Designer"
   picker reading Designer's `kanban-designer-boards` localStorage key
-  directly (read-only; see `## localStorage keys`), a pasted/uploaded
-  JSON file, a `#board=<base64>` share link (same format Kanban Designer
-  uses for its own links), and a one-shot `?prefill=<json>` query param
-  for a future cross-app handoff link. The Designer picker only works
-  when both apps share an origin (e.g. the production GitHub Pages
-  deploy, `agile-toolkit.github.io/kanban-designer/` +
-  `.../kanban-tracker/`) — it's silently absent in local dev (different
-  Vite ports = different origins) and on a self-hosted fork on a
-  different domain; file/paste and link import remain the fallback for
-  those cases. This app is consume-only — it never produces a board
-  export, since it doesn't design boards, and never writes to Designer's
-  storage.
+  directly (read-only; see `## localStorage keys`), and a `#board=<base64>`
+  share link / one-shot `?prefill=<json>` query param for cross-origin
+  handoff. JSON file upload and paste import were removed — the Designer
+  picker replaces them as the primary path, and the two apps sharing a
+  GitHub Pages origin in production made copy/paste unnecessary for the
+  common case. One consequence worth stating: a board exported from
+  Kanban Designer as a downloaded `.json` file (e.g. shared over
+  email/Slack, opened in a different browser) can no longer be imported —
+  only same-origin or a share link work now. The Designer picker itself
+  only works when both apps share an origin (the production deploy,
+  `agile-toolkit.github.io/kanban-designer/` + `.../kanban-tracker/`) —
+  it's silently absent in local dev (different Vite ports = different
+  origins) and on a self-hosted fork on a different domain; the share
+  link is the only remaining path in those cases. This app is
+  consume-only — it never produces a board export, since it doesn't
+  design boards, and never writes to Designer's storage.
 ```
 
 ---
@@ -79,7 +84,8 @@ the existing MVP entry's style):
 ```markdown
 - ~~localStorage board picker: "From Kanban Designer" import reading
   Designer's `kanban-designer-boards` key directly on shared-origin
-  deploys, alongside existing file/paste/`#board=`/`?prefill=` import~~
+  deploys; JSON file/paste import removed, `#board=`/`?prefill=` link
+  import kept~~
 ```
 
 And a short explanatory note (next to or below the shipped line, matching
@@ -91,7 +97,10 @@ This superseded the earlier "Send to Kanban Tracker" link candidate
 Designer's UI (open Designer, click send, land back in Tracker); since
 both apps already share a GitHub Pages origin in production, Tracker can
 just read Designer's stored boards directly with one click, no link or
-Designer-side change required. The `?prefill=` link path stays for
+Designer-side change required. JSON file/paste import was removed in the
+same pass, not kept as a fallback — a Designer board shared outside the
+browser (e.g. an emailed export) no longer has an import path; the
+`#board=`/`?prefill=` link path is the one exception that stays, for
 cross-origin/self-hosted cases where the localStorage read doesn't apply.
 ```
 
@@ -107,8 +116,6 @@ cross-origin/self-hosted cases where the localStorage read doesn't apply.
 
 After Cmok's real build + Bahnik's code QA pass (the pipeline's second
 Cmok → Veles step), re-open this file, confirm the diffs still match what
-was actually built (row/paragraph wording may need small edits if
-implementation details shifted at UAT — e.g. if file/paste import is
-fully removed rather than kept as fallback, or if the legacy singular-key
-question resolved differently), then apply directly to README.md and
-ROADMAP.md.
+was actually built (file/paste removal is now confirmed and reflected
+above; only the legacy singular-key question could still shift wording),
+then apply directly to README.md and ROADMAP.md.

@@ -9,10 +9,16 @@ under the same origin (`agile-toolkit.github.io/kanban-designer/` and
 board via JSON file upload, paste, or a link — even when Designer's boards
 are sitting right there in the same browser. This feature adds a "Pick a
 board from Kanban Designer" flow that reads Designer's `kanban-designer-boards`
-key directly and lets the user import with one click, no copy/paste. It
-does not change what gets imported (still a one-time snapshot into
-Tracker's own `TrackerBoard`, same as today) — only how the user gets
-there.
+key directly and lets the user import with one click, no copy/paste.
+
+**Decided at UAT (2026-09-04): the manual JSON file-upload and paste-JSON
+UI is removed, not kept as a fallback.** The Designer picker becomes
+Tracker's only *UI-driven* import path. Link-based import (`#board=` share
+link, `?prefill=` handoff param) stays — those aren't "JSON import" from a
+user's point of view (no file, no textarea, nothing to copy/paste by
+hand); they're the mechanism a "no shared origin" scenario (cross-device,
+a self-hosted fork) would need to keep working at all, and removing them
+isn't what was asked. See Open Questions if that reading needs correcting.
 
 ## Acceptance Criteria
 
@@ -29,9 +35,10 @@ there.
       (nothing designed yet, different browser/device, local dev, a
       self-hosted fork not sharing the origin), the picker section is
       hidden or shows an empty/explanatory state — never an error.
-- [ ] AC4 — The existing JSON file/paste import and the `#board=` /
-      `?prefill=` link imports keep working unchanged (see Open Questions
-      for whether they stay first-class or move to "advanced").
+- [ ] AC4 — The JSON file-upload button and paste-JSON textarea are
+      removed from `ImportPanel`. The `#board=` and `?prefill=` link
+      imports keep working unchanged (they're not user-facing "JSON
+      import" — no file, no textarea).
 - [ ] AC5 — Re-importing the same Designer board (picked twice, or once
       via picker and once via a stale share link) creates a second
       independent `TrackerBoard` — consistent with today's behavior for
@@ -40,17 +47,22 @@ there.
       remains consume-only with respect to Designer's data.
 - [ ] AC7 — i18n: new picker UI copy ships in all four locales (EN/ES/BE/RU),
       matching the rest of the app.
+- [ ] AC8 — When `kanban-designer-boards` is absent/empty (AC3) **and**
+      the file/paste UI is gone, `ImportPanel` shows a clear explanatory
+      empty state ("Design a board in Kanban Designer, then come back to
+      track it here" or similar) with the link out to Kanban Designer —
+      not a blank panel with nothing to do. This is a new, real state that
+      didn't exist before (previously the panel always had file/paste to
+      fall back to).
 
 ## Open Questions
 
-- [ ] **Keep JSON file/paste import, or remove it now that the picker
-      exists?** The user's framing ("we do not need JSON import") reads as
-      a direction to remove it, but file/paste is the only path that still
-      works cross-device/cross-browser (Designer on one machine, Tracker
-      on another) and for anyone self-hosting a fork off a different
-      origin. Recommendation below under Deferred Decisions — needs
-      explicit user confirmation before Cmok builds, ideally at the
-      mockup/UAT gate.
+- [x] ~~Keep JSON file/paste import, or remove it now that the picker
+      exists?~~ **Resolved at UAT (2026-09-04): remove it.** User
+      confirmed: "Import from JSON not required." Link-based import
+      (`#board=`, `?prefill=`) is kept — not read as covered by that
+      answer, since it's not a manual-JSON experience. Flagging this
+      reading explicitly in case it needs correcting.
 - [ ] Should the picker also read `kanban-designer-board` (singular,
       `LEGACY_KEY` in Designer's `App.tsx`), or is that Designer's own
       migration concern that always resolves into `kanban-designer-boards`
@@ -67,17 +79,20 @@ there.
 
 ## Deferred Decisions
 
-- **JSON file/paste import: keep as a fallback, not the default.** Make
-  the Designer picker the primary/first-shown import path whenever
-  `kanban-designer-boards` has entries; keep file/paste and the link-based
-  imports available (e.g. under an "other ways to import" disclosure)
-  rather than deleting them. Reason to defer full removal: it's a real
-  product/scope call (loses cross-device import capability) that the user
-  should confirm rather than have assumed from one sentence.
-  **Cmok: implement the picker as the primary path now, keep file/paste
-  and link import working as secondary/fallback; revisit full removal of
-  file/paste once the user confirms at UAT that cross-device import isn't
-  needed.**
+- **JSON file/paste import: removed.** Decided at UAT — see Open
+  Questions. Consequence worth stating plainly since it's a real
+  capability loss, not just a UI simplification: a board exported from
+  Kanban Designer as a downloaded `.json` file (Designer's own
+  `exportJSON`, e.g. shared by email/Slack rather than opened in the same
+  browser) can no longer be brought into Tracker at all — no UI path
+  accepts it. Only same-origin (localStorage picker) or a share link
+  (`#board=`/`?prefill=`) get a board in. **Cmok: remove the upload
+  button, the paste textarea, and their handlers (`handleFile`/
+  `tryImport`) from `ImportPanel.tsx`. Once that's gone,
+  `parseBoardFile()` in `boardImport.ts` has no remaining caller in app
+  code — remove it too (and its direct unit tests) rather than leave it
+  dead; `parseBoardFromHash`/`parsePrefillBoard` stay, they're the link
+  paths and still call `unwrapBoardImport` directly.**
 - **No live sync.** Import stays a one-time copy into `kanban-tracker-boards`,
   same as today — not a live view into Designer's data. Revisit only if a
   future request specifically asks for two-way or live-updating boards;
@@ -138,10 +153,14 @@ there.
 - **Same-origin dependency is silent in dev.** Locally, Tracker and
   Designer run on different Vite dev ports (different origins), so
   `kanban-designer-boards` will never be visible during local dev even
-  with both apps running — the picker's empty state (AC3) is exactly what
-  a developer will see locally, which is by design, not a bug to chase.
+  with both apps running — the empty state (AC3/AC8) is exactly what a
+  developer will see locally, which is by design, not a bug to chase.
   Worth a one-line comment in the code so this isn't mistaken for broken
-  local dev.
+  local dev. Same caveat applies more sharply now than in the original
+  draft: with file/paste gone, a local dev environment has **no working
+  UI import path at all** except manually driving a `#board=`/`?prefill=`
+  URL — worth a dev-only note (e.g. in the empty state or a code comment)
+  so this doesn't read as a regression during development.
 
 ## Documentation Implications
 
@@ -149,16 +168,20 @@ there.
   under `## Tech notes`) documenting that Tracker *reads* Designer's
   `kanban-designer-boards` key (read-only, cross-app, relies on shared
   GitHub Pages origin) in addition to its own keys.
-- **Tracker README `## Tech notes` → Board interchange section** — add the
-  Designer-picker path as a fourth import source alongside file/paste,
-  `#board=`, and `?prefill=`, and note the same-origin dependency (won't
-  work across different deploys/origins, e.g. a self-hosted fork on a
-  different domain, or local dev).
+- **Tracker README `## Tech notes` → Board interchange section** — rewrite:
+  three import paths become two — the new Designer-picker (localStorage,
+  same-origin) and the existing link-based imports (`#board=`,
+  `?prefill=`) — and explicitly note that file/paste JSON import was
+  **removed** (not just superseded), since a Designer board exported and
+  shared outside the browser (e.g. emailed `.json`) now has no way in.
+  Note the same-origin dependency too (won't work across different
+  deploys/origins, e.g. a self-hosted fork on a different domain, or local
+  dev).
 - **`agile-toolkit/.github` `BOARD_SCHEMA.md` "Adopters" section** — update
-  the stale "Kanban Tracker: ... Not yet implemented" line (JSON import
-  already shipped; this feature adds the localStorage path). Out of this
-  repo's scope to edit directly from here, but flag for Zlydni/Veles to
-  raise or PR into that meta-repo once this ships.
+  the stale "Kanban Tracker: ... Not yet implemented" line to describe the
+  localStorage path (not JSON import — that's gone). Out of this repo's
+  scope to edit directly from here, but flag for Zlydni/Veles to raise or
+  PR into that meta-repo once this ships.
 - **ROADMAP.md** — this feature supersedes the "Next" candidate "A 'Send
   to Kanban Tracker' link from Kanban Designer" (link-push approach); note
   in the shipped-entry that the localStorage-picker approach was chosen

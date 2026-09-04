@@ -1,65 +1,72 @@
 # localstorage-board-import — Mockups
 
-Interactive mockup (real Tailwind, both themes, State 2's disclosure
-actually opens/closes): **https://claude.ai/code/artifact/f848f9b0-5785-4157-9f4c-43480235bf7c**
+Interactive mockup (real Tailwind, both themes): **https://claude.ai/code/artifact/f848f9b0-5785-4157-9f4c-43480235bf7c**
 
 Built against the app's own design tokens (`src/tokens.css`, `.card`/
-`btn-primary`/`btn-secondary` from `src/index.css`, `KanbanIcon`'s current
-slate placeholder color) rather than a fresh palette, so it should read as
+`btn-secondary` from `src/index.css`, `KanbanIcon`'s current slate
+placeholder color) rather than a fresh palette, so it should read as
 "this app, slightly changed" rather than a new visual system.
+
+**Revision note (2026-09-04):** the first pass of this mockup kept
+file/paste JSON import as a collapsible fallback. The user confirmed at
+UAT — "Import from JSON not required" — that it should be removed
+entirely, not demoted. The mockup, spec, and ux-design.md were all updated
+to match; the artifact link above is the current (second) revision.
 
 ## States implemented
 
-1. **Default** — Designer boards present, picker list expanded, file/paste
-   collapsed under "Other ways to import" (closed).
-2. **Disclosure open** — same panel, "Other ways to import" expanded via a
-   real `<details>/<summary>` (not a static screenshot of the open state —
-   click it in the artifact).
-3. **No Designer boards** — today's `ImportPanel` unchanged, byte-for-byte,
-   for side-by-side comparison with the two states above.
+1. **Designer boards present** — the picker list, full stop. No upload
+   button, no paste textarea, no toggle — that UI no longer exists.
+2. **No Designer boards** — a new empty state (AC8): icon, "No boards
+   yet", one line pointing at Kanban Designer, and the "Open Kanban
+   Designer" link/button as the only action. Styled after `BoardHome`'s
+   existing zero-boards pattern rather than a new empty-state style.
 
 Not separately mocked (covered by the states matrix in `ux-design.md`,
-no new visual needed): loading (N/A — synchronous read), error (existing
-red `import.error` text, unchanged), success (board appears in "Your
-boards" above the panel, unchanged pattern), retry (same row, clickable
-again).
+no new visual needed): loading (N/A — synchronous read), error (no error
+state remains in this panel — nothing left for a user to type wrong),
+success (board appears in "Your boards" above the panel, unchanged
+pattern), retry (same row, clickable again).
 
 ## ASCII fallback (same layout, for the record without opening the link)
 
 ```
-┌─ Import a board ─────────────────────────────┐
-│ From Kanban Designer                          │
-│  [▦ Sprint 14 Board       4 col · 12 cd · 2h→]│
-│  [▦ Onboarding Flow       3 col · 7 cd · 3d  →]│
-│ ▸ Other ways to import                        │
-│ 🔗 Design a board first? Open Kanban Designer │
-└────────────────────────────────────────────────┘
+┌─ Import a board ─────────────┐   ┌─ Import a board ─────────────┐
+│ From Kanban Designer         │   │                               │
+│ [▦ Sprint 14 Board  4·12·2h→]│   │            ▦                  │
+│ [▦ Onboarding Flow  3·7·3d →]│   │        No boards yet          │
+│                               │   │  Design one in Kanban Designer│
+└───────────────────────────────┘   │  [ Open Kanban Designer ]    │
+                                     └───────────────────────────────┘
 ```
 
 ## ACs covered by these mockups
 
-AC1 (list with name/columns/cards/updated), AC3 (clean absent state, state
-3), AC4 (file/paste still present and functional, state 2), AC7 (mockup
-copy is EN; real i18n keys are a Cmok build task, not a mockup concern).
-AC2/AC5/AC6 are import-behavior, not visual — nothing to mock.
+AC1 (list with name/columns/cards/updated), AC3+AC8 (empty state,
+state 2), AC4 (upload/paste UI confirmed removed), AC7 (mockup copy is
+EN; real i18n keys are a Cmok build task). AC2/AC5/AC6 are import-behavior,
+not visual — nothing to mock.
 
-## Open for the user at UAT
+## Consequence flagged, not hidden
 
-Both carried over from the spec/UX, unresolved by design alone:
+With file/paste gone, a Kanban Designer board downloaded as a `.json`
+file and shared outside the browser (email, Slack, a different device
+with no localStorage overlap) has **no way into Tracker** anymore. Only
+same-origin (this picker) or a share link (`#board=`/`?prefill=`, kept —
+not read as "JSON import" since there's no file/textarea involved) still
+work. Called out in the mockup itself so it's an accepted tradeoff, not a
+silently dropped capability.
 
-1. **Keep JSON file/paste as a permanent fallback (as mocked), or remove
-   it once this ships?** Recommendation on record (spec, deferred
-   decision): keep it — cross-device import (Designer on one machine,
-   Tracker on another) has no other path today.
-2. Should Tracker also read Designer's legacy singular
-   `kanban-designer-board` key, or is the plural key (which Designer
-   itself migrates into on load) always sufficient? Leaning "plural is
-   enough" but flagging since it's a real edge case, not just a naming
-   detail.
+## Still open for the user
+
+1. Should the picker also read Designer's legacy singular
+   `kanban-designer-board` key, or is the current plural key (which
+   Designer itself migrates into on load) always sufficient? Leaning
+   "plural is enough" unless told otherwise — this is the only remaining
+   open question before Laznik.
 
 ---
 
-**UAT: Review the mockup at the link above (and/or the ASCII fallback).
-Approve to proceed to Laznik (architecture + tests). If either open
-question above should go a different way than the recommendation, say so
-now — it changes what Laznik specs tests against.**
+**UAT: file/paste-removal decision applied. Review the updated mockup
+above — approve to proceed to Laznik (architecture + tests), or flag
+anything else that should change first.**

@@ -57,3 +57,21 @@ comparison. Built from the app's real design tokens, not a new palette.
 Two open questions carried to the user unchanged (file/paste
 keep-vs-remove; legacy singular-key read) — no code written.
 STOPPING per pipeline: User UAT required before Laznik.
+
+## 19:55 User → Vadavik/Lojma/Cmok [UAT feedback — file/paste removal confirmed]
+User: "Import from JSON not required." Resolves open question #1: JSON
+file-upload and paste-JSON UI removed entirely (not kept as fallback).
+Link-based import (`#board=`, `?prefill=`) kept — not read as covered by
+that answer, flagged explicitly for correction if wrong.
+Updated in place (no new feature folder): spec.md (AC4 rewritten, new
+AC8 for the resulting empty state, Deferred Decision confirmed with
+Cmok build note to also remove now-dead `parseBoardFile()`),
+ux-design.md (progressive-disclosure design struck through and replaced
+— no toggle, panel is picker-or-empty-state only), mockups.md +
+interactive artifact (same URL, republished: two states instead of
+three, no disclosure), doc-plan.md (Tech notes draft now shows two import
+paths instead of four, ROADMAP shipped-note updated).
+Remaining open question (unchanged): legacy singular-key read
+(`kanban-designer-board`) — recommendation "plural is enough" stands,
+not yet confirmed by user.
+Still stopped for explicit UAT confirmation before Laznik per pipeline.
