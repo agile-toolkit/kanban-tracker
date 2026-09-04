@@ -1,1 +1,42 @@
-{}
+{
+  "app": {
+    "title": "Kanban Tracker"
+  },
+  "nav": {
+    "home": "Доски"
+  },
+  "facilitator": {
+    "toggle_on": "Выйти из режима фасилитатора",
+    "toggle_off": "Режим фасилитатора"
+  },
+  "home": {
+    "yourBoards": "Ваши доски",
+    "boardMeta": "{{columns}} колонок · {{cards}} карточек",
+    "deleteBoard": "Удалить {{name}}",
+    "emptyHeading": "Импортируйте доску, чтобы начать отслеживание",
+    "emptySubtitle": "Kanban Tracker запускает доску, спроектированную в Kanban Designer, — сам он доски не проектирует."
+  },
+  "import": {
+    "title": "Импортировать доску",
+    "explainer": "Вставьте или загрузите доску, экспортированную из Kanban Designer (JSON), либо откройте ссылку для обмена Kanban Tracker — подойдёт и то, и другое.",
+    "uploadButton": "Загрузить файл JSON",
+    "pasteLabel": "Или вставьте JSON доски",
+    "pastePlaceholder": "{ \"schema\": \"agile-toolkit.kanban-board\", ... }",
+    "pasteButton": "Импортировать",
+    "error": "Это не похоже на доску — проверьте JSON и попробуйте снова.",
+    "designHint": "Ещё нет доски?",
+    "designLink": "Спроектируйте её в Kanban Designer"
+  },
+  "board": {
+    "noColumns": "У этой доски нет колонок.",
+    "emptyColumn": "Нет карточек",
+    "wipExceeded": "Превышен лимит WIP"
+  },
+  "card": {
+    "days": "дн",
+    "ageTitle": "{{days}} дней в этой колонке",
+    "overdue": "просрочено",
+    "checklistProgress": "{{done}}/{{total}} готово",
+    "moveTo": "Переместить из {{column}} в…"
+  }
+}

@@ -1,1 +1,42 @@
-{}
+{
+  "app": {
+    "title": "Kanban Tracker"
+  },
+  "nav": {
+    "home": "Boards"
+  },
+  "facilitator": {
+    "toggle_on": "Exit facilitator mode",
+    "toggle_off": "Facilitator mode"
+  },
+  "home": {
+    "yourBoards": "Your boards",
+    "boardMeta": "{{columns}} columns · {{cards}} cards",
+    "deleteBoard": "Delete {{name}}",
+    "emptyHeading": "Import a board to start tracking",
+    "emptySubtitle": "Kanban Tracker runs a board someone designed in Kanban Designer — it doesn't design boards itself."
+  },
+  "import": {
+    "title": "Import a board",
+    "explainer": "Paste or upload a board exported from Kanban Designer (JSON), or open a Kanban Tracker share link — either works.",
+    "uploadButton": "Upload JSON file",
+    "pasteLabel": "Or paste board JSON",
+    "pastePlaceholder": "{ \"schema\": \"agile-toolkit.kanban-board\", ... }",
+    "pasteButton": "Import",
+    "error": "That doesn't look like a board — check the JSON and try again.",
+    "designHint": "Don't have a board yet?",
+    "designLink": "Design one in Kanban Designer"
+  },
+  "board": {
+    "noColumns": "This board has no columns.",
+    "emptyColumn": "No cards",
+    "wipExceeded": "Over the WIP limit"
+  },
+  "card": {
+    "days": "d",
+    "ageTitle": "{{days}} days in this column",
+    "overdue": "overdue",
+    "checklistProgress": "{{done}}/{{total}} done",
+    "moveTo": "Move from {{column}} to…"
+  }
+}
