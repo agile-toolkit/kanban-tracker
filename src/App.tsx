@@ -74,7 +74,7 @@ export default function App() {
     : []
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" data-accent="teal">
       <div className="print:hidden">
         <AppHeader
           title={t('app.title')}
