@@ -1,1 +1,42 @@
-{}
+{
+  "app": {
+    "title": "Kanban Tracker"
+  },
+  "nav": {
+    "home": "Tableros"
+  },
+  "facilitator": {
+    "toggle_on": "Salir del modo facilitador",
+    "toggle_off": "Modo facilitador"
+  },
+  "home": {
+    "yourBoards": "Tus tableros",
+    "boardMeta": "{{columns}} columnas · {{cards}} tarjetas",
+    "deleteBoard": "Eliminar {{name}}",
+    "emptyHeading": "Importa un tablero para empezar a hacer seguimiento",
+    "emptySubtitle": "Kanban Tracker ejecuta un tablero que alguien diseñó en Kanban Designer — no diseña tableros por sí mismo."
+  },
+  "import": {
+    "title": "Importar un tablero",
+    "explainer": "Pega o sube un tablero exportado desde Kanban Designer (JSON), o abre un enlace para compartir de Kanban Tracker — ambos funcionan.",
+    "uploadButton": "Subir archivo JSON",
+    "pasteLabel": "O pega el JSON del tablero",
+    "pastePlaceholder": "{ \"schema\": \"agile-toolkit.kanban-board\", ... }",
+    "pasteButton": "Importar",
+    "error": "Eso no parece un tablero — revisa el JSON e inténtalo de nuevo.",
+    "designHint": "¿Aún no tienes un tablero?",
+    "designLink": "Diseña uno en Kanban Designer"
+  },
+  "board": {
+    "noColumns": "Este tablero no tiene columnas.",
+    "emptyColumn": "Sin tarjetas",
+    "wipExceeded": "Supera el límite de WIP"
+  },
+  "card": {
+    "days": "d",
+    "ageTitle": "{{days}} días en esta columna",
+    "overdue": "vencida",
+    "checklistProgress": "{{done}}/{{total}} hecho",
+    "moveTo": "Mover de {{column}} a…"
+  }
+}
