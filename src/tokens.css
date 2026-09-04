@@ -1,0 +1,161 @@
+/**
+ * Agile Toolkit — Design Tokens
+ * CSS custom properties derived from patterns used across the 10-app suite.
+ * All apps use Tailwind CSS; these tokens map to the Tailwind values in use.
+ * Reference this file before choosing color, spacing, or radius values.
+ */
+:root {
+  /* ── Brand ────────────────────────────────────────────────────────────── */
+  --color-brand:       #2563eb;  /* blue-600 — links, app titles, CTA text   */
+  --color-brand-light: #bfdbfe;  /* blue-200 — inactive chart bars           */
+  --color-brand-dark:  #1d4ed8;  /* blue-700 — hover states                  */
+
+  /* ── Surface ──────────────────────────────────────────────────────────── */
+  --color-surface:        #ffffff;  /* white     — card / panel backgrounds   */
+  --color-surface-muted:  #f8fafc;  /* slate-50  — page bg, stats-panel bg    */
+  --color-surface-subtle: #f1f5f9;  /* slate-100 — hover tint, avatar overflow*/
+
+  /* ── Text ─────────────────────────────────────────────────────────────── */
+  --color-text-primary:   #1e293b;  /* slate-800 — headings, values, bold data */
+  --color-text-secondary: #64748b;  /* slate-500 — descriptions, labels        */
+  --color-text-muted:     #94a3b8;  /* slate-400 — timestamps, placeholders    */
+
+  /* ── Border ───────────────────────────────────────────────────────────── */
+  --color-border: #e2e8f0;  /* slate-200 */
+
+  /* ── Status: Active ───────────────────────────────────────────────────── */
+  --color-active-top-border: #34d399;  /* emerald-400 — 2px top border on card */
+  --color-active-badge-bg:   #d1fae5;  /* emerald-100                          */
+  --color-active-badge-text: #065f46;  /* emerald-700                          */
+  --color-active-fill:       #10b981;  /* emerald-500 — progress bar fill       */
+
+  /* ── Status: Live (in-session) ────────────────────────────────────────── */
+  --color-live-top-border: #fb923c;  /* orange-400 — 2px top border on card  */
+  --color-live-badge-bg:   #fef3c7;  /* amber-100                            */
+  --color-live-badge-text: #b45309;  /* amber-700                            */
+  --color-live-dot:        #f97316;  /* orange-500 — animated pulse dot      */
+
+  /* ── Status: Warning / WIP exceeded ──────────────────────────────────── */
+  --color-wip-bg:     #fef2f2;  /* red-50  */
+  --color-wip-border: #fecaca;  /* red-200 */
+  --color-wip-text:   #dc2626;  /* red-600 */
+
+  /* ── Hero gradient (Dashboard header) ────────────────────────────────── */
+  --color-hero-from: #1a1a2e;
+  --color-hero-via:  #16213e;
+  --color-hero-to:   #0f3460;
+
+  /* ── Avatar palette (6 rotating colors) ──────────────────────────────── */
+  --color-avatar-1-bg:   #dbeafe; --color-avatar-1-text: #1d4ed8;  /* blue    */
+  --color-avatar-2-bg:   #ede9fe; --color-avatar-2-text: #6d28d9;  /* violet  */
+  --color-avatar-3-bg:   #d1fae5; --color-avatar-3-text: #065f46;  /* emerald */
+  --color-avatar-4-bg:   #fef3c7; --color-avatar-4-text: #92400e;  /* amber   */
+  --color-avatar-5-bg:   #ffe4e6; --color-avatar-5-text: #9f1239;  /* rose    */
+  --color-avatar-6-bg:   #cffafe; --color-avatar-6-text: #0e7490;  /* cyan    */
+
+  /* ── Spacing ──────────────────────────────────────────────────────────── */
+  --space-card-x:        1.25rem;   /* 20px — px-5: card horizontal padding  */
+  --space-card-y-header: 1rem;      /* 16px — pt-4: card header top padding  */
+  --space-card-y-footer: 1rem;      /* 16px — pb-4: card footer bottom pad   */
+  --space-panel-x:       0.75rem;   /* 12px — px-3: stats-panel horizontal   */
+  --space-panel-y:       0.625rem;  /* 10px — py-2.5: stats-panel vertical   */
+
+  /* ── Border radii ─────────────────────────────────────────────────────── */
+  --radius-card:   0.75rem;  /* 12px — rounded-xl : card outer             */
+  --radius-panel:  0.5rem;   /* 8px  — rounded-lg : stats panel            */
+  --radius-badge:  9999px;   /* rounded-full      : badges                 */
+  --radius-avatar: 9999px;   /* rounded-full      : avatars                */
+  --radius-bar:    0.125rem; /* 2px  — rx="1"     : SVG chart bars         */
+
+  /* ── Typography scale ─────────────────────────────────────────────────── */
+  --text-app-title:     0.9375rem;  /* 15px — card app name                  */
+  --text-section-label: 0.8125rem;  /* 13px — uppercase section headings     */
+  --text-description:   0.875rem;   /* 14px — text-sm: body descriptions     */
+  --text-chip:          0.8125rem;  /* 13px — stat chip value + label        */
+  --text-badge:         0.65rem;    /* ~10px — live / active badge           */
+  --text-timestamp:     0.7rem;     /* ~11px — relative timestamps           */
+  --text-cta:           0.8125rem;  /* 13px  — "Open app →" link             */
+  --text-avatar:        0.5625rem;  /* 9px   — avatar initials               */
+
+  /* ── Theme: Light (default) ───────────────────────────────────────────── */
+  /*
+   * Semantic theme tokens map to Tailwind classes via the convention below.
+   * Apps adopt dark mode by toggling class="dark" on <html> and referencing
+   * these tokens in their Tailwind config dark: variant.
+   *
+   * Tailwind mapping:
+   *   --theme-bg            → bg-white              / dark:bg-gray-950
+   *   --theme-bg-subtle     → bg-gray-50            / dark:bg-gray-900
+   *   --theme-bg-muted      → bg-gray-100           / dark:bg-gray-800
+   *   --theme-surface       → bg-white              / dark:bg-gray-900
+   *   --theme-surface-raised→ bg-white              / dark:bg-gray-850 (gray-800/50)
+   *   --theme-border        → border-gray-200       / dark:border-gray-700
+   *   --theme-border-subtle → border-gray-100       / dark:border-gray-800
+   *   --theme-text-primary  → text-gray-900         / dark:text-gray-50
+   *   --theme-text-secondary→ text-gray-600         / dark:text-gray-400
+   *   --theme-text-muted    → text-gray-400         / dark:text-gray-600
+   *   --theme-header-bg     → bg-white              / dark:bg-gray-900
+   *   --theme-header-border → border-gray-200       / dark:border-gray-800
+   *   --theme-card-bg       → bg-white              / dark:bg-gray-900
+   *   --theme-card-border   → border-gray-200       / dark:border-gray-700
+   *   --theme-input-bg      → bg-white              / dark:bg-gray-900
+   *   --theme-input-border  → border-gray-300       / dark:border-gray-600
+   */
+  --theme-bg:             #ffffff;
+  --theme-bg-subtle:      #f9fafb;   /* gray-50  */
+  --theme-bg-muted:       #f3f4f6;   /* gray-100 */
+  --theme-surface:        #ffffff;
+  --theme-surface-raised: #ffffff;
+  --theme-border:         #e5e7eb;   /* gray-200 */
+  --theme-border-subtle:  #f3f4f6;   /* gray-100 */
+  --theme-text-primary:   #111827;   /* gray-900 */
+  --theme-text-secondary: #4b5563;   /* gray-600 */
+  --theme-text-muted:     #9ca3af;   /* gray-400 */
+  --theme-header-bg:      #ffffff;
+  --theme-header-border:  #e5e7eb;   /* gray-200 */
+  --theme-card-bg:        #ffffff;
+  --theme-card-border:    #e5e7eb;   /* gray-200 */
+  --theme-input-bg:       #ffffff;
+  --theme-input-border:   #d1d5db;   /* gray-300 */
+}
+
+/* ── Theme: Dark ──────────────────────────────────────────────────────────── */
+/*
+ * Applied when <html class="dark"> is set.
+ * ThemeToggle (design-system/components/ThemeToggle.tsx) manages this class
+ * and persists the preference to localStorage('theme').
+ *
+ * Apps must add `darkMode: 'class'` to tailwind.config.js to enable
+ * Tailwind's dark: variant alongside these CSS tokens.
+ */
+[data-theme="dark"] {
+  --theme-bg:             #030712;   /* gray-950 */
+  --theme-bg-subtle:      #111827;   /* gray-900 */
+  --theme-bg-muted:       #1f2937;   /* gray-800 */
+  --theme-surface:        #111827;   /* gray-900 */
+  --theme-surface-raised: #1f2937;   /* gray-800 */
+  --theme-border:         #374151;   /* gray-700 */
+  --theme-border-subtle:  #1f2937;   /* gray-800 */
+  --theme-text-primary:   #f9fafb;   /* gray-50  */
+  --theme-text-secondary: #9ca3af;   /* gray-400 */
+  --theme-text-muted:     #6b7280;   /* gray-500 */
+  --theme-header-bg:      #111827;   /* gray-900 */
+  --theme-header-border:  #1f2937;   /* gray-800 */
+  --theme-card-bg:        #111827;   /* gray-900 */
+  --theme-card-border:    #374151;   /* gray-700 */
+  --theme-input-bg:       #111827;   /* gray-900 */
+  --theme-input-border:   #4b5563;   /* gray-600 */
+}
+
+/* ── Facilitator (projector) mode ────────────────────────────────────────── */
+/*
+ * Toggled by design-system/components/useFacilitatorMode.ts + FacilitatorToggle.tsx.
+ * Bigger UI for in-room workshops presented on a screen — everything sized
+ * in rem scales automatically from this one rule. Apps typically also hide
+ * secondary chrome (language picker, nav pills, progress bars) and further
+ * enlarge key elements while facilitator-mode is active; see
+ * useFacilitatorMode.ts for the full pattern.
+ */
+html.facilitator-mode {
+  font-size: 1.25rem;
+}
