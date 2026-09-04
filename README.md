@@ -73,6 +73,9 @@ GitHub Pages via GitHub Actions on push to `main`.
   `LanguagePicker.tsx`, `ErrorBoundary.tsx`, `FacilitatorToggle.tsx`,
   `useFacilitatorMode.ts`, `icons.tsx`) — copied verbatim from
   `agile-toolkit.github.io/design-system/components/`, per suite convention.
-- **Placeholder brand scale** — `tailwind.config.js`'s `brand-*` colors are
-  still Tailwind's stock `slate`; no `data-accent` has been assigned in the
-  suite's per-app accent table yet — pending alongside `GOAL.md`.
+- **`data-accent="teal"`** — set on the app root in `App.tsx`; already
+  assigned in the Dashboard's per-app accent table (`agile-toolkit.github.io`
+  CLAUDE.md), alongside Sprint Metrics. `tailwind.config.js`'s `brand-*`
+  colors are still Tailwind's stock `slate` placeholder though — teal isn't
+  wired into the local Tailwind scale yet, only into `data-accent` (which
+  drives the shared design-system CSS variables, not `brand-*`).

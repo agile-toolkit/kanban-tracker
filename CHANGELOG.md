@@ -4,6 +4,14 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+## 0.2.1 — Fix: apply the assigned accent (2026-09-04)
+
+- **fix**: set `data-accent="teal"` on the app root — the Dashboard's own
+  per-app accent table already assigned this app teal (alongside Sprint
+  Metrics), but it was never applied since there was no real UI to carry it
+  until v0.2.0 shipped. Missed in that release; caught immediately after
+  while wiring up the Dashboard card.
+
 ## 0.2.0 — MVP: import and run a board (2026-09-04)
 
 - **feat**: import a board via file upload, paste, a `#board=` share link,
