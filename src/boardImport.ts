@@ -57,11 +57,3 @@ export function parseBoardFromHash(hash: string): TrackerBoard | null {
     return null
   }
 }
-
-export function parseBoardFile(text: string): TrackerBoard | null {
-  try {
-    return unwrapBoardImport(JSON.parse(text))
-  } catch {
-    return null
-  }
-}

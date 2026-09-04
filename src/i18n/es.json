@@ -18,12 +18,11 @@
   },
   "import": {
     "title": "Importar un tablero",
-    "explainer": "Pega o sube un tablero exportado desde Kanban Designer (JSON), o abre un enlace para compartir de Kanban Tracker — ambos funcionan.",
-    "uploadButton": "Subir archivo JSON",
-    "pasteLabel": "O pega el JSON del tablero",
-    "pastePlaceholder": "{ \"schema\": \"agile-toolkit.kanban-board\", ... }",
-    "pasteButton": "Importar",
-    "error": "Eso no parece un tablero — revisa el JSON e inténtalo de nuevo.",
+    "explainer": "Elige un tablero diseñado en Kanban Designer.",
+    "designerBoardsHeading": "Desde Kanban Designer",
+    "designerBoardMeta": "{{columns}} columnas · {{cards}} tarjetas · actualizado {{time}}",
+    "emptyHeading": "Aún no hay tableros",
+    "emptySubtitle": "Diseña uno en Kanban Designer y vuelve aquí para hacerle seguimiento.",
     "designHint": "¿Aún no tienes un tablero?",
     "designLink": "Diseña uno en Kanban Designer"
   },

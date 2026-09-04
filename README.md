@@ -40,18 +40,32 @@ GitHub Pages via GitHub Actions on push to `main`.
 | `kanban-tracker:lastSession` | `{ boardName, columnCount, cardCount, boardCount, lastColumnName, lastColumnCount, updatedAt }` | Summary written on every board change — read by the suite Dashboard's "last session" card. |
 | `theme` | `"light" \| "dark"` | Shared, suite-wide theme preference (unprefixed key by convention). |
 | `agile-toolkit:facilitatorMode` (`sessionStorage`) | `'1' \| '0'` | Facilitator (projector) mode toggle, shared across suite apps in the same tab. |
+| `kanban-designer-boards` (read-only) | `KanbanBoard[]` (Kanban Designer's own storage shape) | Read by the "From Kanban Designer" import picker when present on the same origin. Owned and written by Kanban Designer, not Tracker — Tracker never writes this key. |
 
 ## Tech notes
 
 - **Board interchange** (`src/boardImport.ts`) — consumes the canonical
   `{schema, version, board}` envelope documented in `BOARD_SCHEMA.md`
   (`agile-toolkit/.github` meta-repo), with a fallback to a bare board
-  object for producers that predate the schema. Three import paths, all
-  going through the same `unwrapBoardImport()`: a pasted/uploaded JSON
-  file, a `#board=<base64>` share link (same format Kanban Designer uses
-  for its own links), and a one-shot `?prefill=<json>` query param for a
-  future cross-app handoff link. This app is consume-only — it never
-  produces a board export, since it doesn't design boards.
+  object for producers that predate the schema. Two import paths, both
+  going through the same `unwrapBoardImport()`: a "From Kanban Designer"
+  picker reading Designer's `kanban-designer-boards` localStorage key
+  directly (read-only; see `## localStorage keys`), and a
+  `#board=<base64>` share link / one-shot `?prefill=<json>` query param
+  for cross-origin handoff. JSON file upload and paste import were
+  removed — the Designer picker replaces them as the primary path, and
+  the two apps sharing a GitHub Pages origin in production made
+  copy/paste unnecessary for the common case. One consequence worth
+  stating: a board exported from Kanban Designer as a downloaded `.json`
+  file (e.g. shared over email/Slack, opened in a different browser) can
+  no longer be imported — only same-origin or a share link work now. The
+  Designer picker itself only works when both apps share an origin (the
+  production deploy, `agile-toolkit.github.io/kanban-designer/` +
+  `.../kanban-tracker/`) — it's silently absent in local dev (different
+  Vite ports = different origins) and on a self-hosted fork on a
+  different domain; the share link is the only remaining path in those
+  cases. This app is consume-only — it never produces a board export,
+  since it doesn't design boards, and never writes to Designer's storage.
 - **Tracking model** (`src/tracker.ts`) — pure functions operating on a
   `TrackerBoard`: `moveCard` (stamps `enteredColumnAt` so the card-aging
   badge resets), `toggleChecklistItem`, `daysInColumn`, `isOverdue`,

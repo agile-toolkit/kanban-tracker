@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { unwrapBoardImport, parsePrefillBoard, parseBoardFromHash, parseBoardFile, BOARD_SCHEMA } from './boardImport'
+import { unwrapBoardImport, parsePrefillBoard, parseBoardFromHash, BOARD_SCHEMA } from './boardImport'
 
 const rawBoard = {
   id: 'b1',
@@ -66,16 +66,5 @@ describe('parseBoardFromHash', () => {
   it('parses a base64-encoded board', () => {
     const encoded = btoa(encodeURIComponent(JSON.stringify(rawBoard)))
     expect(parseBoardFromHash(`#board=${encoded}`)?.id).toBe('b1')
-  })
-})
-
-describe('parseBoardFile', () => {
-  it('parses a JSON file matching the envelope', () => {
-    const text = JSON.stringify({ schema: BOARD_SCHEMA, version: 1, board: rawBoard })
-    expect(parseBoardFile(text)?.id).toBe('b1')
-  })
-
-  it('returns null on invalid JSON', () => {
-    expect(parseBoardFile('{not valid')).toBeNull()
   })
 })
