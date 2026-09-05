@@ -43,5 +43,15 @@
     "addChecklistItemPlaceholder": "Дадаць пункт…",
     "addChecklistItem": "Дадаць пункт",
     "removeChecklistItem": "Выдаліць «{{text}}»"
+  },
+  "stats": {
+    "label": "Статыстыка",
+    "show": "Паказаць статыстыку",
+    "hide": "Схаваць статыстыку",
+    "totalCards": "Усяго картак",
+    "overdue": "Прасрочана",
+    "checklist": "Спіс задач",
+    "checklistNone": "Няма элементаў",
+    "wipViolations": "WIP перавышаны"
   }
 }

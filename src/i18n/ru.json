@@ -43,5 +43,15 @@
     "addChecklistItemPlaceholder": "Добавить пункт…",
     "addChecklistItem": "Добавить пункт",
     "removeChecklistItem": "Удалить «{{text}}»"
+  },
+  "stats": {
+    "label": "Статистика",
+    "show": "Показать статистику",
+    "hide": "Скрыть статистику",
+    "totalCards": "Всего карточек",
+    "overdue": "Просрочено",
+    "checklist": "Чек-лист",
+    "checklistNone": "Нет пунктов",
+    "wipViolations": "WIP превышен"
   }
 }

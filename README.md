@@ -3,8 +3,9 @@
 A lightweight board execution app: import a board designed in Kanban
 Designer, then run real work on it — move cards between columns, set due
 dates and assignees, add/toggle/remove checklist items, see WIP limits and
-overdue dates. No setup, no account, no board design (that's Kanban
-Designer's job). Client-side only: no backend — state lives in
+overdue dates, and track a stats panel (total cards, overdue, checklist
+completion, WIP violations). No setup, no account, no board design (that's
+Kanban Designer's job). Client-side only: no backend — state lives in
 `localStorage`.
 
 This app has no formal `GOAL.md` yet — see the repo's "Goal needed" issue
@@ -71,8 +72,15 @@ GitHub Pages via GitHub Actions on push to `main`.
   `TrackerBoard`: `moveCard` (stamps `enteredColumnAt` so the card-aging
   badge resets), `updateCardFields` (due date/assignee, `undefined` clears
   a field), `toggleChecklistItem`, `addChecklistItem`, `removeChecklistItem`,
-  `daysInColumn`, `isOverdue`, `checklistProgress`, `wipStatus`. All
-  unit-tested independent of React.
+  `daysInColumn`, `isOverdue`, `checklistProgress`, `wipStatus`,
+  `boardStats` (aggregates all of the above into the stats panel's numbers).
+  All unit-tested independent of React.
+- **Stats panel** (`TrackerStatsPanel.tsx`) — total cards, overdue count,
+  aggregate checklist completion, and WIP-limit violation count, plus a
+  per-column card-count line, derived fresh from `boardStats()` on every
+  render (nothing cached or persisted). Toggleable via a button next to the
+  board title; hidden in Facilitator Mode along with the rest of that
+  mode's simplified chrome.
 - **Card movement UI** — a "Move from X to…" `<select>` per card rather
   than pointer drag-and-drop. Deliberate for v1: fully keyboard-accessible,
   no drag-collision tuning to get subtly wrong, and consistent with this

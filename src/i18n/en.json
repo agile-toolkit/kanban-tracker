@@ -43,5 +43,15 @@
     "addChecklistItemPlaceholder": "Add an item…",
     "addChecklistItem": "Add item",
     "removeChecklistItem": "Remove \"{{text}}\""
+  },
+  "stats": {
+    "label": "Stats",
+    "show": "Show stats",
+    "hide": "Hide stats",
+    "totalCards": "Total cards",
+    "overdue": "Overdue",
+    "checklist": "Checklist",
+    "checklistNone": "No items",
+    "wipViolations": "WIP over limit"
   }
 }

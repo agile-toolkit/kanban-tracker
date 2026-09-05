@@ -91,3 +91,40 @@ export function wipStatus(column: TrackerColumn): WipStatus {
   if (column.wipLimit == null) return 'ok'
   return column.cards.length > column.wipLimit ? 'over' : 'ok'
 }
+
+export interface BoardStats {
+  totalCards: number
+  perColumn: { columnId: string; name: string; count: number }[]
+  overdueCount: number
+  checklist: { done: number; total: number }
+  wipViolations: number
+}
+
+/** Aggregate board-wide metrics for the stats panel. Pure, derived from the board on every render — nothing cached. */
+export function boardStats(board: TrackerBoard, now: number = Date.now()): BoardStats {
+  let overdueCount = 0
+  let checklistDone = 0
+  let checklistTotal = 0
+  let wipViolations = 0
+
+  const perColumn = board.columns.map(col => {
+    if (wipStatus(col) === 'over') wipViolations++
+    for (const card of col.cards) {
+      if (isOverdue(card, now)) overdueCount++
+      const progress = checklistProgress(card)
+      if (progress) {
+        checklistDone += progress.done
+        checklistTotal += progress.total
+      }
+    }
+    return { columnId: col.id, name: col.name, count: col.cards.length }
+  })
+
+  return {
+    totalCards: perColumn.reduce((sum, c) => sum + c.count, 0),
+    perColumn,
+    overdueCount,
+    checklist: { done: checklistDone, total: checklistTotal },
+    wipViolations,
+  }
+}

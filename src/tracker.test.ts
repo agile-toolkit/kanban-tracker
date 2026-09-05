@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { TrackerBoard, TrackerCard } from './types'
 import {
   moveCard, toggleChecklistItem, daysInColumn, isOverdue, checklistProgress, wipStatus,
-  updateCardFields, addChecklistItem, removeChecklistItem,
+  updateCardFields, addChecklistItem, removeChecklistItem, boardStats,
 } from './tracker'
 
 function makeCard(overrides: Partial<TrackerCard> = {}): TrackerCard {
@@ -172,6 +172,55 @@ describe('checklistProgress', () => {
   it('counts done vs total', () => {
     const card = makeCard({ checklist: [{ id: '1', text: 'a', done: true }, { id: '2', text: 'b', done: false }] })
     expect(checklistProgress(card)).toEqual({ done: 1, total: 2 })
+  })
+})
+
+describe('boardStats', () => {
+  it('counts total cards and per-column breakdown', () => {
+    const board = makeBoard()
+    board.columns[1].cards = [makeCard({ id: 'c2' })]
+    const stats = boardStats(board)
+    expect(stats.totalCards).toBe(2)
+    expect(stats.perColumn).toEqual([
+      { columnId: 'todo', name: 'To do', count: 1 },
+      { columnId: 'doing', name: 'Doing', count: 1 },
+    ])
+  })
+
+  it('counts overdue cards', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].dueDate = '2020-01-01'
+    const stats = boardStats(board)
+    expect(stats.overdueCount).toBe(1)
+  })
+
+  it('aggregates checklist progress across all cards', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].checklist = [{ id: 'i1', text: 'a', done: true }, { id: 'i2', text: 'b', done: false }]
+    board.columns[1].cards = [makeCard({ id: 'c2', checklist: [{ id: 'i3', text: 'c', done: true }] })]
+    const stats = boardStats(board)
+    expect(stats.checklist).toEqual({ done: 2, total: 3 })
+  })
+
+  it('counts columns over their WIP limit', () => {
+    const board = makeBoard()
+    board.columns[1].wipLimit = 0
+    board.columns[1].cards = [makeCard({ id: 'c2' })]
+    const stats = boardStats(board)
+    expect(stats.wipViolations).toBe(1)
+  })
+
+  it('returns zeroed stats for an empty board', () => {
+    const board = makeBoard()
+    board.columns[0].cards = []
+    const stats = boardStats(board)
+    expect(stats).toEqual({
+      totalCards: 0,
+      perColumn: [{ columnId: 'todo', name: 'To do', count: 0 }, { columnId: 'doing', name: 'Doing', count: 0 }],
+      overdueCount: 0,
+      checklist: { done: 0, total: 0 },
+      wipViolations: 0,
+    })
   })
 })
 

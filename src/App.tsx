@@ -9,7 +9,8 @@ import FacilitatorToggle from './components/FacilitatorToggle'
 import { useFacilitatorMode } from './components/useFacilitatorMode'
 import BoardHome from './components/BoardHome'
 import TrackerBoardView from './components/TrackerBoardView'
-import { KanbanIcon } from './components/icons'
+import TrackerStatsPanel from './components/TrackerStatsPanel'
+import { KanbanIcon, ChartIcon } from './components/icons'
 
 // A board handed off via #board= (this app's own share format, matching
 // Kanban Designer's) or ?prefill= (a one-shot cross-app handoff, e.g. a
@@ -34,6 +35,7 @@ export default function App() {
   })
   const [screen, setScreen] = useState<Screen>(_handoffBoard ? 'board' : 'home')
   const [activeBoardId, setActiveBoardId] = useState<string | null>(_handoffBoard?.id ?? null)
+  const [showStats, setShowStats] = useState(true)
 
   const activeBoard = boards.find(b => b.id === activeBoardId) ?? null
 
@@ -101,8 +103,25 @@ export default function App() {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <KanbanIcon className="w-5 h-5 text-brand-500 flex-shrink-0" />
-              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-50 truncate">{activeBoard.name}</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-gray-50 truncate flex-1">{activeBoard.name}</h1>
+              {!facilitatorMode && (
+                <button
+                  type="button"
+                  onClick={() => setShowStats(v => !v)}
+                  aria-pressed={showStats}
+                  aria-label={showStats ? t('stats.hide') : t('stats.show')}
+                  className={`flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-medium rounded-lg px-2.5 py-1.5 ${
+                    showStats
+                      ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400'
+                      : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'
+                  }`}
+                >
+                  <ChartIcon className="w-3.5 h-3.5" />
+                  {t('stats.label')}
+                </button>
+              )}
             </div>
+            {showStats && !facilitatorMode && <TrackerStatsPanel board={activeBoard} />}
             <TrackerBoardView board={activeBoard} onChange={handleBoardChange} />
           </div>
         )}
