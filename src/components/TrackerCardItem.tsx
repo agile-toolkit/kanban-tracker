@@ -11,16 +11,19 @@ interface Props {
   card: TrackerCard
   column: TrackerColumn
   otherColumns: TrackerColumn[]
+  dragging: boolean
   onMove: (toColumnId: string) => void
   onToggleChecklistItem: (itemId: string) => void
   onUpdateFields: (patch: { dueDate?: string; assignee?: string }) => void
   onAddChecklistItem: (text: string) => void
   onRemoveChecklistItem: (itemId: string) => void
+  onDragStart: () => void
+  onDragEnd: () => void
 }
 
 export default function TrackerCardItem({
-  card, column, otherColumns, onMove, onToggleChecklistItem,
-  onUpdateFields, onAddChecklistItem, onRemoveChecklistItem,
+  card, column, otherColumns, dragging, onMove, onToggleChecklistItem,
+  onUpdateFields, onAddChecklistItem, onRemoveChecklistItem, onDragStart, onDragEnd,
 }: Props) {
   const { t } = useTranslation()
   const [checklistOpen, setChecklistOpen] = useState(false)
@@ -54,7 +57,18 @@ export default function TrackerCardItem({
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 shadow-sm" style={card.color ? { borderLeftColor: card.color, borderLeftWidth: 3 } : undefined}>
+    <div
+      draggable={!editingFields}
+      onDragStart={e => {
+        e.dataTransfer.effectAllowed = 'move'
+        onDragStart()
+      }}
+      onDragEnd={onDragEnd}
+      className={`rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 shadow-sm cursor-grab active:cursor-grabbing ${
+        dragging ? 'opacity-40' : ''
+      }`}
+      style={card.color ? { borderLeftColor: card.color, borderLeftWidth: 3 } : undefined}
+    >
       <div className="flex items-start justify-between gap-2 mb-1">
         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">{card.title}</h3>
         <div className="flex items-center gap-1.5 flex-shrink-0">

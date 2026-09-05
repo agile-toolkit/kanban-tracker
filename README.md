@@ -1,11 +1,12 @@
 # Kanban Tracker
 
 A lightweight board execution app: import a board designed in Kanban
-Designer, then run real work on it — move cards between columns, set due
-dates and assignees, add/toggle/remove checklist items, see WIP limits and
-overdue dates, and track a stats panel (total cards, overdue, checklist
-completion, WIP violations). No setup, no account, no board design (that's
-Kanban Designer's job). Client-side only: no backend — state lives in
+Designer, then run real work on it — drag cards between columns (or use
+the keyboard-accessible "Move to" select), set due dates and assignees,
+add/toggle/remove checklist items, see WIP limits and overdue dates, and
+track a stats panel (total cards, overdue, checklist completion, WIP
+violations). No setup, no account, no board design (that's Kanban
+Designer's job). Client-side only: no backend — state lives in
 `localStorage`.
 
 This app has no formal `GOAL.md` yet — see the repo's "Goal needed" issue
@@ -81,11 +82,16 @@ GitHub Pages via GitHub Actions on push to `main`.
   render (nothing cached or persisted). Toggleable via a button next to the
   board title; hidden in Facilitator Mode along with the rest of that
   mode's simplified chrome.
-- **Card movement UI** — a "Move from X to…" `<select>` per card rather
-  than pointer drag-and-drop. Deliberate for v1: fully keyboard-accessible,
-  no drag-collision tuning to get subtly wrong, and consistent with this
-  app's "lightweight" positioning. Worth revisiting if users ask for
-  drag-and-drop specifically.
+- **Card movement UI** — native HTML5 drag-and-drop (`draggable` +
+  `dragstart`/`dragover`/`drop` in `TrackerCardItem.tsx`/`TrackerBoardView.tsx`,
+  no library) plus the original "Move from X to…" `<select>`, kept
+  alongside it rather than replaced: drag-and-drop doesn't work on touch
+  devices without a polyfill and isn't keyboard-operable, so the select
+  stays the accessible/mobile path. Dragging is disabled on a card while
+  its due-date/assignee editor is open (`draggable={!editingFields}`) so
+  text selection inside those inputs isn't hijacked. Dropping into a
+  column already over its WIP limit is allowed, same as the select — it's
+  a visual warning, not a hard block, both here and via `moveCard()`.
 - **No board design** — no add/remove column, no WIP-limit editing, no
   card creation. An imported board's structure is fixed; only its cards
   move and their tracking fields (due date, assignee, checklist) are

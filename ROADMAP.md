@@ -9,6 +9,12 @@ should still formalize `GOAL.md` before the next epic starts from scratch.
 None — idle after the MVP below shipped in one pass.
 
 ## Recently shipped
+**Drag-and-drop card movement** (2026-09-05) — see `## Shipped`. Evaluated
+and built: native HTML5 drag-and-drop alongside the existing "Move to"
+select (kept, not replaced — it's the accessible/touch-device path).
+Completes the parity work needed for Tracker to be a fully functional
+kanban board in its own right.
+
 **Stats panel** (2026-09-05) — see `## Shipped`. Total cards, overdue
 count, aggregate checklist completion, and WIP-limit violations, plus a
 per-column breakdown — toggleable, hidden in Facilitator Mode.
@@ -33,9 +39,6 @@ job.
 
 Candidates surfaced while building the MVP, deliberately not built without
 a goal to justify them:
-- Evaluate drag-and-drop card movement now that Tracker is the suite's only
-  execution surface (current v1 uses a "Move to" select instead — see
-  README `## Tech notes` for why).
 - Swim lanes and sub-columns (the type model already carries them from
   `BOARD_SCHEMA.md`, but the tracker view doesn't render them yet — no
   sample board in testing has used either).
@@ -47,6 +50,9 @@ a goal to justify them:
 No small un-filed items queued.
 
 ## Shipped
+- ~~Drag-and-drop card movement (native HTML5, no library), kept alongside
+  the existing "Move to" select as the accessible/touch-device
+  fallback~~ (2026-09-05)
 - ~~Stats panel: total cards, overdue count, aggregate checklist
   completion, WIP-limit violations, per-column breakdown~~ (2026-09-05)
 - ~~Full card tracking CRUD: inline due-date/assignee editing, add/remove
