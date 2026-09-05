@@ -203,3 +203,33 @@ top-level section parity only).
 Build: `npm run build` (tsc + vite build) — clean, no errors/warnings.
 Test: `npm test` (vitest run) — 4 files, 39/39 passed.
 Handing off to Bahnik for code QA and to Veles (parallel) for docs.
+
+## 20:12 Bahnik → Zlydni [code QA]
+Context: code QA (from Cmok build). Result: PASS. Issues: none.
+Verified independently: `npm test` 39/39 passed, `npm run build` clean.
+No `localStorage.setItem` on Designer's key (AC6). `parseBoardFile()` fully
+removed, zero dangling references. `loadDesignerBoards()` never throws.
+4 disclosed deviations all confirmed as reasonable engineering calls
+(Intl.RelativeTimeFormat, distinct empty-state i18n keys, design-hint
+empty-only rendering, column-reference test adjustment — pre-existing
+`unwrapBoardImport()` behavior confirmed at boardImport.ts:32).
+i18n: all 4 locales have real translations, no orphaned keys.
+Security/PII: no secrets, no XSS (React auto-escaping, no innerHTML),
+no new PII surface. UI matches revised wireframes (picker-or-empty-state,
+no leftover toggle/disclosure).
+Changed files: src/designerImport.ts, src/designerImport.test.ts,
+src/boardImport.ts, src/boardImport.test.ts,
+src/components/ImportPanel.tsx, src/i18n/{en,es,be,ru}.json,
+README.md, ROADMAP.md, CHANGELOG.md, package.json.
+Coverage: 39 passed, 0 failed, 0 todo.
+
+## 04:56 Zlydni → End [commit + archive]
+Resumed after a usage-limit gap (session picked back up 2026-09-05).
+Independently re-verified: `npm run build` clean, `npm test` 39/39
+passed. Manually verified in a real browser (Playwright + Chromium):
+empty state with no Designer boards on-origin, the picker listing two
+seeded Designer boards with correct `Intl.RelativeTimeFormat` meta
+("updated 2 hours ago" / "updated 5 days ago"), and a successful import
+landing on the board view with the right columns/cards/WIP display.
+Feature folder archived to `.artefacts/archive/`. Pushing branch,
+opening PR, merging, verifying CI.
