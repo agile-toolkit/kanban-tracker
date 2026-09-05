@@ -4,6 +4,15 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+## 0.4.0 — Stats panel (2026-09-05)
+
+- **feat**: a stats panel above the board — total cards, overdue count,
+  aggregate checklist completion (`done/total` across every card), and a
+  count of columns over their WIP limit, plus a per-column card-count
+  breakdown line. Backed by the new pure `boardStats()` (`src/tracker.ts`).
+  Toggleable via a "Stats" button next to the board title; hidden in
+  Facilitator Mode along with the rest of the chrome it already simplifies.
+
 ## 0.3.0 — Full card tracking CRUD (2026-09-05)
 
 - **feat**: inline due-date/assignee editing — a pencil icon on each card

@@ -9,6 +9,10 @@ should still formalize `GOAL.md` before the next epic starts from scratch.
 None — idle after the MVP below shipped in one pass.
 
 ## Recently shipped
+**Stats panel** (2026-09-05) — see `## Shipped`. Total cards, overdue
+count, aggregate checklist completion, and WIP-limit violations, plus a
+per-column breakdown — toggleable, hidden in Facilitator Mode.
+
 **Full card tracking CRUD** (2026-09-05) — see `## Shipped`. Cards were
 previously read-only apart from checklist toggling; this closes the gap so
 Tracker can fully replace the tracking capability being removed from Kanban
@@ -29,8 +33,6 @@ job.
 
 Candidates surfaced while building the MVP, deliberately not built without
 a goal to justify them:
-- A stats panel (cards per column, overdue count, checklist completion) —
-  in progress, next up now that card CRUD is complete.
 - Evaluate drag-and-drop card movement now that Tracker is the suite's only
   execution surface (current v1 uses a "Move to" select instead — see
   README `## Tech notes` for why).
@@ -45,6 +47,8 @@ a goal to justify them:
 No small un-filed items queued.
 
 ## Shipped
+- ~~Stats panel: total cards, overdue count, aggregate checklist
+  completion, WIP-limit violations, per-column breakdown~~ (2026-09-05)
 - ~~Full card tracking CRUD: inline due-date/assignee editing, add/remove
   checklist items (previously toggle-only)~~ (2026-09-05) — done ahead of
   removing Kanban Designer's Track mode, so Tracker fully covers the

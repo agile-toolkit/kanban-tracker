@@ -43,5 +43,15 @@
     "addChecklistItemPlaceholder": "Añadir un elemento…",
     "addChecklistItem": "Añadir elemento",
     "removeChecklistItem": "Eliminar \"{{text}}\""
+  },
+  "stats": {
+    "label": "Estadísticas",
+    "show": "Mostrar estadísticas",
+    "hide": "Ocultar estadísticas",
+    "totalCards": "Tarjetas totales",
+    "overdue": "Vencidas",
+    "checklist": "Lista de verificación",
+    "checklistNone": "Sin elementos",
+    "wipViolations": "WIP excedido"
   }
 }
