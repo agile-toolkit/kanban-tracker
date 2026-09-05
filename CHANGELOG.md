@@ -4,6 +4,21 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+## 0.5.0 — Drag-and-drop card movement (2026-09-05)
+
+- **feat**: cards can now be dragged between columns (native HTML5
+  `draggable`/`dragstart`/`dragover`/`drop`, no library) with a drop-target
+  highlight on the destination column and a dimmed source card while
+  dragging. The original "Move from X to…" `<select>` stays — deliberately
+  not replaced — as the keyboard-accessible and touch-device path, since
+  HTML5 drag-and-drop covers neither. A card's `draggable` is disabled
+  while its due-date/assignee editor is open, so text selection in those
+  inputs isn't hijacked by the parent's drag handling.
+- **context**: evaluated per the roadmap's "Next" list and built now that
+  Tracker is the suite's one execution surface — the last of three pieces
+  (CRUD, stats, drag-and-drop) closing the gap with what Kanban Designer's
+  Track mode offered, ahead of that mode being removed from Designer.
+
 ## 0.4.0 — Stats panel (2026-09-05)
 
 - **feat**: a stats panel above the board — total cards, overdue count,

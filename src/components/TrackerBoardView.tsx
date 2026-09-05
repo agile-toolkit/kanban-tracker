@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TrackerBoard } from '../types'
 import { moveCard, toggleChecklistItem, updateCardFields, addChecklistItem, removeChecklistItem, wipStatus } from '../tracker'
@@ -11,9 +12,19 @@ interface Props {
 
 export default function TrackerBoardView({ board, onChange }: Props) {
   const { t } = useTranslation()
+  const [dragCard, setDragCard] = useState<{ cardId: string; fromColumnId: string } | null>(null)
+  const [dragOverColumnId, setDragOverColumnId] = useState<string | null>(null)
 
   const handleMove = (cardId: string, fromColumnId: string, toColumnId: string) => {
     onChange(moveCard(board, cardId, fromColumnId, toColumnId))
+  }
+
+  const handleDrop = (toColumnId: string) => {
+    if (dragCard && dragCard.fromColumnId !== toColumnId) {
+      handleMove(dragCard.cardId, dragCard.fromColumnId, toColumnId)
+    }
+    setDragCard(null)
+    setDragOverColumnId(null)
   }
 
   const handleToggleChecklistItem = (columnId: string, cardId: string, itemId: string) => {
@@ -59,7 +70,23 @@ export default function TrackerBoardView({ board, onChange }: Props) {
             {board.showWipWarnings && status === 'over' && (
               <p className="text-[11px] text-red-600 dark:text-red-400 px-1 mb-2">{t('board.wipExceeded')}</p>
             )}
-            <div className="space-y-2 min-h-[2rem]">
+            <div
+              className={`space-y-2 min-h-[2rem] rounded-xl transition-colors ${
+                dragOverColumnId === column.id && dragCard?.fromColumnId !== column.id
+                  ? 'bg-brand-50 dark:bg-brand-950/30 ring-2 ring-inset ring-brand-300 dark:ring-brand-700'
+                  : ''
+              }`}
+              onDragOver={e => {
+                if (!dragCard) return
+                e.preventDefault()
+                setDragOverColumnId(column.id)
+              }}
+              onDragLeave={() => setDragOverColumnId(current => (current === column.id ? null : current))}
+              onDrop={e => {
+                e.preventDefault()
+                handleDrop(column.id)
+              }}
+            >
               {column.cards.length === 0 ? (
                 <p className="text-xs text-gray-300 dark:text-gray-700 px-1 py-2 text-center border border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
                   {t('board.emptyColumn')}
@@ -71,11 +98,17 @@ export default function TrackerBoardView({ board, onChange }: Props) {
                     card={card}
                     column={column}
                     otherColumns={otherColumns}
+                    dragging={dragCard?.cardId === card.id}
                     onMove={toColumnId => handleMove(card.id, column.id, toColumnId)}
                     onToggleChecklistItem={itemId => handleToggleChecklistItem(column.id, card.id, itemId)}
                     onUpdateFields={patch => handleUpdateFields(column.id, card.id, patch)}
                     onAddChecklistItem={text => handleAddChecklistItem(column.id, card.id, text)}
                     onRemoveChecklistItem={itemId => handleRemoveChecklistItem(column.id, card.id, itemId)}
+                    onDragStart={() => setDragCard({ cardId: card.id, fromColumnId: column.id })}
+                    onDragEnd={() => {
+                      setDragCard(null)
+                      setDragOverColumnId(null)
+                    }}
                   />
                 ))
               )}
