@@ -4,6 +4,26 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+## 0.2.2 — Import boards directly from Kanban Designer (2026-09-04)
+
+- **feat**: "From Kanban Designer" picker (`src/designerImport.ts`) reads
+  Designer's own `kanban-designer-boards` localStorage key directly on the
+  shared-origin production deploy and lists its boards for one-click
+  import through the existing `unwrapBoardImport()` normalization —
+  read-only, never writes to Designer's storage.
+- **removed**: JSON file-upload and paste-JSON import
+  (`ImportPanel.tsx`'s upload button/textarea, `boardImport.ts`'s
+  `parseBoardFile()`) — decided at UAT as no longer needed now that the
+  Designer picker covers the common same-browser case. A board exported
+  as a standalone `.json` file (e.g. emailed) no longer has an import
+  path; the `#board=` share link and `?prefill=` handoff param are
+  unaffected and still work.
+- **feat**: new empty state in `ImportPanel` ("No boards yet — design one
+  in Kanban Designer") when no Designer boards are found (absent key,
+  empty array, different origin, or local dev where Tracker/Designer run
+  on different Vite ports) — replaces the old always-present upload/paste
+  UI as the panel's only other state.
+
 ## 0.2.1 — Fix: apply the assigned accent (2026-09-04)
 
 - **fix**: set `data-accent="teal"` on the app root — the Dashboard's own

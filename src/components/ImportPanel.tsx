@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { parseBoardFile } from '../boardImport'
+import { loadDesignerBoards, formatRelativeTime } from '../designerImport'
+import { unwrapBoardImport } from '../boardImport'
 import type { TrackerBoard } from '../types'
-import { UploadIcon, LinkIcon } from './icons'
+import { KanbanIcon, ArrowRightIcon, LinkIcon } from './icons'
 
 interface Props {
   onImport: (board: TrackerBoard) => void
@@ -10,81 +10,79 @@ interface Props {
 
 const KANBAN_DESIGNER_URL = 'https://agile-toolkit.github.io/kanban-designer/'
 
-export default function ImportPanel({ onImport }: Props) {
+/**
+ * Reuses the existing "Don't have a board yet? Design one in Kanban
+ * Designer" hint (unchanged copy/keys) as the only way forward when no
+ * Designer boards are found — see ux-design.md's empty-state wireframe.
+ */
+function DesignHint() {
   const { t } = useTranslation()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [pasteText, setPasteText] = useState('')
-  const [error, setError] = useState(false)
+  return (
+    <p className="text-xs text-gray-400 dark:text-gray-600 flex items-start justify-center gap-1.5">
+      <LinkIcon className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+      <span>
+        {t('import.designHint')}{' '}
+        <a href={KANBAN_DESIGNER_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+          {t('import.designLink')}
+        </a>
+      </span>
+    </p>
+  )
+}
 
-  const tryImport = (text: string) => {
-    const board = parseBoardFile(text)
-    if (!board) {
-      setError(true)
-      return
-    }
-    setError(false)
-    setPasteText('')
-    onImport(board)
-  }
-
-  const handleFile = (file: File) => {
-    const reader = new FileReader()
-    reader.onload = e => tryImport(e.target?.result as string)
-    reader.readAsText(file)
-  }
+export default function ImportPanel({ onImport }: Props) {
+  const { t, i18n } = useTranslation()
+  const designerBoards = loadDesignerBoards()
 
   return (
     <div className="card max-w-lg mx-auto">
       <h2 className="font-semibold text-gray-900 dark:text-gray-50 mb-1">{t('import.title')}</h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('import.explainer')}</p>
 
-      <label className="btn-primary text-sm inline-flex items-center gap-2 cursor-pointer mb-4">
-        <UploadIcon className="w-4 h-4" />
-        {t('import.uploadButton')}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,application/json"
-          className="sr-only"
-          onChange={e => {
-            const f = e.target.files?.[0]
-            if (f) handleFile(f)
-            e.target.value = ''
-          }}
-        />
-      </label>
-
-      <div className="mb-4">
-        <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">{t('import.pasteLabel')}</label>
-        <textarea
-          className="input font-mono text-xs h-28 resize-none"
-          value={pasteText}
-          onChange={e => setPasteText(e.target.value)}
-          placeholder={t('import.pastePlaceholder')}
-        />
-        <button
-          type="button"
-          onClick={() => tryImport(pasteText)}
-          disabled={!pasteText.trim()}
-          className="btn-secondary text-sm mt-2"
-        >
-          {t('import.pasteButton')}
-        </button>
-      </div>
-
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400 mb-3">{t('import.error')}</p>
+      {designerBoards.length > 0 ? (
+        <>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('import.explainer')}</p>
+          <h3 className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">{t('import.designerBoardsHeading')}</h3>
+          <div className="border border-gray-100 dark:border-gray-800 rounded-lg divide-y divide-gray-100 dark:divide-gray-800 overflow-hidden">
+            {designerBoards.map(entry => {
+              const cardCount = entry.columns.reduce((sum, col) => sum + col.cards.length, 0)
+              const meta = entry.updatedAt !== undefined
+                ? t('import.designerBoardMeta', {
+                    columns: entry.columns.length,
+                    cards: cardCount,
+                    time: formatRelativeTime(entry.updatedAt, i18n.language),
+                  })
+                : t('home.boardMeta', { columns: entry.columns.length, cards: cardCount })
+              return (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => {
+                    const board = unwrapBoardImport(entry)
+                    if (board) onImport(board)
+                  }}
+                  className="w-full flex items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                >
+                  <span className="flex items-center gap-3 min-w-0">
+                    <KanbanIcon className="w-5 h-5 text-brand-500 flex-shrink-0" />
+                    <span className="min-w-0">
+                      <span className="block font-medium text-gray-900 dark:text-gray-50 truncate">{entry.name}</span>
+                      <span className="block text-xs text-gray-400 dark:text-gray-500">{meta}</span>
+                    </span>
+                  </span>
+                  <ArrowRightIcon className="w-4 h-4 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+                </button>
+              )
+            })}
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-4">
+          <KanbanIcon className="w-10 h-10 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+          <h3 className="font-semibold text-gray-900 dark:text-gray-50 mb-1">{t('import.emptyHeading')}</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('import.emptySubtitle')}</p>
+          <DesignHint />
+        </div>
       )}
-
-      <p className="text-xs text-gray-400 dark:text-gray-600 flex items-start gap-1.5">
-        <LinkIcon className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-        <span>
-          {t('import.designHint')}{' '}
-          <a href={KANBAN_DESIGNER_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600 dark:hover:text-gray-300">
-            {t('import.designLink')}
-          </a>
-        </span>
-      </p>
     </div>
   )
 }

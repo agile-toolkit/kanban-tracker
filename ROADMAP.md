@@ -27,8 +27,6 @@ a goal to justify them:
 - Swim lanes and sub-columns (the type model already carries them from
   `BOARD_SCHEMA.md`, but the tracker view doesn't render them yet — no
   sample board in testing has used either).
-- A "Send to Kanban Tracker" link from Kanban Designer, now that this app
-  can receive one via `?prefill=`.
 - Team Identity assignee picker (Kanban Designer's Track mode has this;
   worth matching if assignee becomes a heavily-used field here).
 
@@ -36,6 +34,20 @@ a goal to justify them:
 No small un-filed items queued.
 
 ## Shipped
+- ~~localStorage board picker: "From Kanban Designer" import reading
+  Designer's `kanban-designer-boards` key directly on shared-origin
+  deploys; JSON file/paste import removed, `#board=`/`?prefill=` link
+  import kept~~ (2026-09-04) — superseded the earlier "Send to Kanban
+  Tracker" link candidate (was listed above): a Designer-initiated link
+  would need a round-trip through Designer's UI (open Designer, click
+  send, land back in Tracker); since both apps already share a GitHub
+  Pages origin in production, Tracker can just read Designer's stored
+  boards directly with one click, no link or Designer-side change
+  required. JSON file/paste import was removed in the same pass, not kept
+  as a fallback — a Designer board shared outside the browser (e.g. an
+  emailed export) no longer has an import path; the `#board=`/`?prefill=`
+  link path is the one exception that stays, for cross-origin/self-hosted
+  cases where the localStorage read doesn't apply.
 - ~~MVP: import a board (file/paste/`#board=`/`?prefill=`) and run it —
   move cards between columns, checklist toggling, WIP-limit and overdue
   warnings, card-aging badges, multi-board list, EN/ES/BE/RU~~

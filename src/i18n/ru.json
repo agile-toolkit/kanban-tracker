@@ -18,12 +18,11 @@
   },
   "import": {
     "title": "Импортировать доску",
-    "explainer": "Вставьте или загрузите доску, экспортированную из Kanban Designer (JSON), либо откройте ссылку для обмена Kanban Tracker — подойдёт и то, и другое.",
-    "uploadButton": "Загрузить файл JSON",
-    "pasteLabel": "Или вставьте JSON доски",
-    "pastePlaceholder": "{ \"schema\": \"agile-toolkit.kanban-board\", ... }",
-    "pasteButton": "Импортировать",
-    "error": "Это не похоже на доску — проверьте JSON и попробуйте снова.",
+    "explainer": "Выберите доску, спроектированную в Kanban Designer.",
+    "designerBoardsHeading": "Из Kanban Designer",
+    "designerBoardMeta": "{{columns}} колонок · {{cards}} карточек · обновлено {{time}}",
+    "emptyHeading": "Пока нет досок",
+    "emptySubtitle": "Спроектируйте доску в Kanban Designer, а затем вернитесь сюда, чтобы отслеживать её.",
     "designHint": "Ещё нет доски?",
     "designLink": "Спроектируйте её в Kanban Designer"
   },
