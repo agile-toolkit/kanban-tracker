@@ -36,6 +36,12 @@
     "ageTitle": "{{days}} дней в этой колонке",
     "overdue": "просрочено",
     "checklistProgress": "{{done}}/{{total}} готово",
-    "moveTo": "Переместить из {{column}} в…"
+    "moveTo": "Переместить из {{column}} в…",
+    "editFields": "Редактировать срок и исполнителя",
+    "assigneePlaceholder": "Исполнитель",
+    "addChecklist": "Добавить чек-лист",
+    "addChecklistItemPlaceholder": "Добавить пункт…",
+    "addChecklistItem": "Добавить пункт",
+    "removeChecklistItem": "Удалить «{{text}}»"
   }
 }

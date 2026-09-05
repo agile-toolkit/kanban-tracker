@@ -36,6 +36,12 @@
     "ageTitle": "{{days}} días en esta columna",
     "overdue": "vencida",
     "checklistProgress": "{{done}}/{{total}} hecho",
-    "moveTo": "Mover de {{column}} a…"
+    "moveTo": "Mover de {{column}} a…",
+    "editFields": "Editar fecha límite y responsable",
+    "assigneePlaceholder": "Responsable",
+    "addChecklist": "Añadir lista de tareas",
+    "addChecklistItemPlaceholder": "Añadir un elemento…",
+    "addChecklistItem": "Añadir elemento",
+    "removeChecklistItem": "Eliminar \"{{text}}\""
   }
 }

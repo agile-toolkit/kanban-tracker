@@ -9,6 +9,13 @@ should still formalize `GOAL.md` before the next epic starts from scratch.
 None — idle after the MVP below shipped in one pass.
 
 ## Recently shipped
+**Full card tracking CRUD** (2026-09-05) — see `## Shipped`. Cards were
+previously read-only apart from checklist toggling; this closes the gap so
+Tracker can fully replace the tracking capability being removed from Kanban
+Designer's Track mode. Due date and assignee are now editable inline
+(pencil icon → date/text inputs), and the checklist supports adding and
+removing items, not just toggling existing ones.
+
 **MVP: import and run a board** (2026-09-04) — see `## Shipped`. First real
 feature slice, built directly on the user's own stated direction (quoted in
 issue #1) rather than an epic-issue breakdown, since no `GOAL.md` exists yet
@@ -22,18 +29,26 @@ job.
 
 Candidates surfaced while building the MVP, deliberately not built without
 a goal to justify them:
-- Drag-and-drop card movement (current v1 uses a "Move to" select instead —
-  see README `## Tech notes` for why).
+- A stats panel (cards per column, overdue count, checklist completion) —
+  in progress, next up now that card CRUD is complete.
+- Evaluate drag-and-drop card movement now that Tracker is the suite's only
+  execution surface (current v1 uses a "Move to" select instead — see
+  README `## Tech notes` for why).
 - Swim lanes and sub-columns (the type model already carries them from
   `BOARD_SCHEMA.md`, but the tracker view doesn't render them yet — no
   sample board in testing has used either).
-- Team Identity assignee picker (Kanban Designer's Track mode has this;
-  worth matching if assignee becomes a heavily-used field here).
+- Team Identity assignee picker in place of the current free-text assignee
+  field (Kanban Designer's Track mode had this; worth matching if assignee
+  becomes a heavily-used field here).
 
 ## Polish backlog
 No small un-filed items queued.
 
 ## Shipped
+- ~~Full card tracking CRUD: inline due-date/assignee editing, add/remove
+  checklist items (previously toggle-only)~~ (2026-09-05) — done ahead of
+  removing Kanban Designer's Track mode, so Tracker fully covers the
+  capability being consolidated here.
 - ~~localStorage board picker: "From Kanban Designer" import reading
   Designer's `kanban-designer-boards` key directly on shared-origin
   deploys; JSON file/paste import removed, `#board=`/`?prefill=` link

@@ -4,6 +4,20 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+## 0.3.0 — Full card tracking CRUD (2026-09-05)
+
+- **feat**: inline due-date/assignee editing — a pencil icon on each card
+  opens a `date` input and a free-text assignee input, saved via the new
+  `updateCardFields()` (`src/tracker.ts`); `undefined` clears a field.
+- **feat**: checklist add/remove — the checklist section is now always
+  visible (not gated behind having existing items), with an "Add an
+  item…" input (Enter or a `+` button) calling `addChecklistItem()`, and a
+  hover-revealed remove button per item calling `removeChecklistItem()`.
+  Toggling existing items is unchanged.
+- **context**: closes the gap between what Tracker could do and what Kanban
+  Designer's Track mode offered, ahead of Track mode being removed from
+  Designer entirely — Tracker is now the suite's one execution surface.
+
 ## 0.2.2 — Import boards directly from Kanban Designer (2026-09-04)
 
 - **feat**: "From Kanban Designer" picker (`src/designerImport.ts`) reads

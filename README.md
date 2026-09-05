@@ -1,10 +1,11 @@
 # Kanban Tracker
 
 A lightweight board execution app: import a board designed in Kanban
-Designer, then run real work on it — move cards between columns, check off
-checklist items, see WIP limits and overdue dates. No setup, no account,
-no board design (that's Kanban Designer's job). Client-side only: no
-backend — state lives in `localStorage`.
+Designer, then run real work on it — move cards between columns, set due
+dates and assignees, add/toggle/remove checklist items, see WIP limits and
+overdue dates. No setup, no account, no board design (that's Kanban
+Designer's job). Client-side only: no backend — state lives in
+`localStorage`.
 
 This app has no formal `GOAL.md` yet — see the repo's "Goal needed" issue
 (#1) and `GOALS.md` in the `agile-toolkit/.github` meta-repo. Direction for
@@ -68,18 +69,22 @@ GitHub Pages via GitHub Actions on push to `main`.
   since it doesn't design boards, and never writes to Designer's storage.
 - **Tracking model** (`src/tracker.ts`) — pure functions operating on a
   `TrackerBoard`: `moveCard` (stamps `enteredColumnAt` so the card-aging
-  badge resets), `toggleChecklistItem`, `daysInColumn`, `isOverdue`,
-  `checklistProgress`, `wipStatus`. All unit-tested independent of React.
+  badge resets), `updateCardFields` (due date/assignee, `undefined` clears
+  a field), `toggleChecklistItem`, `addChecklistItem`, `removeChecklistItem`,
+  `daysInColumn`, `isOverdue`, `checklistProgress`, `wipStatus`. All
+  unit-tested independent of React.
 - **Card movement UI** — a "Move from X to…" `<select>` per card rather
   than pointer drag-and-drop. Deliberate for v1: fully keyboard-accessible,
   no drag-collision tuning to get subtly wrong, and consistent with this
   app's "lightweight" positioning. Worth revisiting if users ask for
   drag-and-drop specifically.
 - **No board design** — no add/remove column, no WIP-limit editing, no
-  card creation. An imported board's structure is fixed; only its
-  cards move and their tracking fields (checklist, due date visibility)
-  are interacted with. Redesigning a board's structure means going back to
-  Kanban Designer and re-importing.
+  card creation. An imported board's structure is fixed; only its cards
+  move and their tracking fields (due date, assignee, checklist) are
+  edited — a pencil icon on each card opens an inline due-date/assignee
+  editor, and the checklist section supports adding and removing items,
+  not just toggling existing ones. Redesigning a board's structure means
+  going back to Kanban Designer and re-importing.
 - **State** — `useState` in `App.tsx`, persisted to `kanban-tracker-boards`
   on every change (`src/storage.ts`). Multi-board, like Kanban Designer's
   own board list.

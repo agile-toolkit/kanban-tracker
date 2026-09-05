@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { TrackerBoard } from '../types'
-import { moveCard, toggleChecklistItem, wipStatus } from '../tracker'
+import { moveCard, toggleChecklistItem, updateCardFields, addChecklistItem, removeChecklistItem, wipStatus } from '../tracker'
 import TrackerCardItem from './TrackerCardItem'
 import { WarningIcon } from './icons'
 
@@ -18,6 +18,18 @@ export default function TrackerBoardView({ board, onChange }: Props) {
 
   const handleToggleChecklistItem = (columnId: string, cardId: string, itemId: string) => {
     onChange(toggleChecklistItem(board, columnId, cardId, itemId))
+  }
+
+  const handleUpdateFields = (columnId: string, cardId: string, patch: { dueDate?: string; assignee?: string }) => {
+    onChange(updateCardFields(board, columnId, cardId, patch))
+  }
+
+  const handleAddChecklistItem = (columnId: string, cardId: string, text: string) => {
+    onChange(addChecklistItem(board, columnId, cardId, text))
+  }
+
+  const handleRemoveChecklistItem = (columnId: string, cardId: string, itemId: string) => {
+    onChange(removeChecklistItem(board, columnId, cardId, itemId))
   }
 
   if (board.columns.length === 0) {
@@ -61,6 +73,9 @@ export default function TrackerBoardView({ board, onChange }: Props) {
                     otherColumns={otherColumns}
                     onMove={toColumnId => handleMove(card.id, column.id, toColumnId)}
                     onToggleChecklistItem={itemId => handleToggleChecklistItem(column.id, card.id, itemId)}
+                    onUpdateFields={patch => handleUpdateFields(column.id, card.id, patch)}
+                    onAddChecklistItem={text => handleAddChecklistItem(column.id, card.id, text)}
+                    onRemoveChecklistItem={itemId => handleRemoveChecklistItem(column.id, card.id, itemId)}
                   />
                 ))
               )}
