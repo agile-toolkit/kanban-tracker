@@ -36,6 +36,12 @@
     "ageTitle": "{{days}} дзён у гэтай калонцы",
     "overdue": "пратэрмінавана",
     "checklistProgress": "{{done}}/{{total}} зроблена",
-    "moveTo": "Перамясціць з {{column}} у…"
+    "moveTo": "Перамясціць з {{column}} у…",
+    "editFields": "Рэдагаваць тэрмін і адказнага",
+    "assigneePlaceholder": "Адказны",
+    "addChecklist": "Дадаць спіс задач",
+    "addChecklistItemPlaceholder": "Дадаць пункт…",
+    "addChecklistItem": "Дадаць пункт",
+    "removeChecklistItem": "Выдаліць «{{text}}»"
   }
 }

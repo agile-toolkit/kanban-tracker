@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import type { TrackerBoard, TrackerCard } from './types'
-import { moveCard, toggleChecklistItem, daysInColumn, isOverdue, checklistProgress, wipStatus } from './tracker'
+import {
+  moveCard, toggleChecklistItem, daysInColumn, isOverdue, checklistProgress, wipStatus,
+  updateCardFields, addChecklistItem, removeChecklistItem,
+} from './tracker'
 
 function makeCard(overrides: Partial<TrackerCard> = {}): TrackerCard {
   return { id: 'c1', title: 'Card 1', ...overrides }
@@ -61,6 +64,78 @@ describe('toggleChecklistItem', () => {
     expect(result.columns[0].cards[0].checklist![0].done).toBe(true)
     const result2 = toggleChecklistItem(result, 'todo', 'c1', 'i1')
     expect(result2.columns[0].cards[0].checklist![0].done).toBe(false)
+  })
+})
+
+describe('updateCardFields', () => {
+  it('sets a due date', () => {
+    const board = makeBoard()
+    const result = updateCardFields(board, 'todo', 'c1', { dueDate: '2030-01-01' })
+    expect(result.columns[0].cards[0].dueDate).toBe('2030-01-01')
+  })
+
+  it('sets an assignee without touching due date', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].dueDate = '2030-01-01'
+    const result = updateCardFields(board, 'todo', 'c1', { assignee: 'Alex' })
+    expect(result.columns[0].cards[0].assignee).toBe('Alex')
+    expect(result.columns[0].cards[0].dueDate).toBe('2030-01-01')
+  })
+
+  it('clears a field when set to undefined', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].dueDate = '2030-01-01'
+    const result = updateCardFields(board, 'todo', 'c1', { dueDate: undefined })
+    expect(result.columns[0].cards[0].dueDate).toBeUndefined()
+  })
+
+  it('does not mutate the input board', () => {
+    const board = makeBoard()
+    updateCardFields(board, 'todo', 'c1', { assignee: 'Alex' })
+    expect(board.columns[0].cards[0].assignee).toBeUndefined()
+  })
+})
+
+describe('addChecklistItem', () => {
+  it('appends a new item with a generated id', () => {
+    const board = makeBoard()
+    const result = addChecklistItem(board, 'todo', 'c1', 'Write tests')
+    expect(result.columns[0].cards[0].checklist).toHaveLength(1)
+    expect(result.columns[0].cards[0].checklist![0]).toMatchObject({ text: 'Write tests', done: false })
+    expect(typeof result.columns[0].cards[0].checklist![0].id).toBe('string')
+  })
+
+  it('appends onto an existing checklist', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].checklist = [{ id: 'i1', text: 'First', done: true }]
+    const result = addChecklistItem(board, 'todo', 'c1', 'Second')
+    expect(result.columns[0].cards[0].checklist).toHaveLength(2)
+  })
+
+  it('trims whitespace and ignores empty text', () => {
+    const board = makeBoard()
+    const result = addChecklistItem(board, 'todo', 'c1', '   ')
+    expect(result).toBe(board)
+    const result2 = addChecklistItem(board, 'todo', 'c1', '  Trimmed  ')
+    expect(result2.columns[0].cards[0].checklist![0].text).toBe('Trimmed')
+  })
+})
+
+describe('removeChecklistItem', () => {
+  it('removes the matching item', () => {
+    const board = makeBoard()
+    board.columns[0].cards[0].checklist = [
+      { id: 'i1', text: 'Keep', done: false },
+      { id: 'i2', text: 'Remove', done: false },
+    ]
+    const result = removeChecklistItem(board, 'todo', 'c1', 'i2')
+    expect(result.columns[0].cards[0].checklist).toEqual([{ id: 'i1', text: 'Keep', done: false }])
+  })
+
+  it('is a no-op when there is no checklist', () => {
+    const board = makeBoard()
+    const result = removeChecklistItem(board, 'todo', 'c1', 'missing')
+    expect(result.columns[0].cards[0].checklist).toBeUndefined()
   })
 })
 

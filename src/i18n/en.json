@@ -36,6 +36,12 @@
     "ageTitle": "{{days}} days in this column",
     "overdue": "overdue",
     "checklistProgress": "{{done}}/{{total}} done",
-    "moveTo": "Move from {{column}} to…"
+    "moveTo": "Move from {{column}} to…",
+    "editFields": "Edit due date and assignee",
+    "assigneePlaceholder": "Assignee",
+    "addChecklist": "Add checklist",
+    "addChecklistItemPlaceholder": "Add an item…",
+    "addChecklistItem": "Add item",
+    "removeChecklistItem": "Remove \"{{text}}\""
   }
 }
