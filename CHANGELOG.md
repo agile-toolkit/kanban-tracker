@@ -4,6 +4,11 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+- **build**: sourcemaps are now opt-in. `npm run build` (the production
+  build that `deploy.yml` publishes) no longer emits `.map` files into
+  `dist/`; `npm run build:debug` (`vite build --mode debug`) produces the
+  same bundle with sourcemaps for local debugging.
+
 ## 0.5.0 — Drag-and-drop card movement (2026-09-05)
 
 - **feat**: cards can now be dragged between columns (native HTML5
