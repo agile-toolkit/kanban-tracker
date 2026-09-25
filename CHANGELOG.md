@@ -4,6 +4,10 @@ All notable changes to Kanban Tracker are documented here.
 
 ## Unreleased
 
+- **chore** (security): 0 `npm audit` vulnerabilities, down from 2 —
+  `vitest` ^4.1.11 (patched `@vitest/mocker` arbitrary file read); `vite`
+  kept in step with the suite at ^6.4.3.
+
 - **build**: sourcemaps are now opt-in. `npm run build` (the production
   build that `deploy.yml` publishes) no longer emits `.map` files into
   `dist/`; `npm run build:debug` (`vite build --mode debug`) produces the
